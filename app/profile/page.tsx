@@ -1,3 +1,4 @@
+export const runtime = "nodejs"
 import type { Metadata } from "next"
 import { SiteNavbar } from "@/components/site-navbar"
 import { SiteFooter } from "@/components/site-footer"

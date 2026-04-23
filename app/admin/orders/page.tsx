@@ -1,26 +1,22 @@
-import type { Metadata } from "next"
-import { SiteNavbar } from "@/components/site-navbar"
-import { SiteFooter } from "@/components/site-footer"
-import { prisma } from "@/lib/prisma"
-import { formatPrice, formatDate } from "@/lib/utils"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+export const runtime = "nodejs"
 
-export const metadata: Metadata = { title: "Admin — Orders" }
-
-const STATUS_COLORS: Record<string, string> = {
-  PENDING:      "text-white/45 border-white/15",
-  PARTIAL_PAID: "text-[color:var(--neon-purple)] border-[color:var(--neon-purple)]/40",
-  PAID:         "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
-  SHIPPED:      "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
-  DELIVERED:    "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
-  CANCELLED:    "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40",
-  FAILED:       "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40",
+async function getOrders() {
+  try {
+    return await prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { 
+        user: { select: { name: true, email: true } }, 
+        items: { include: { product: { select: { name: true } } } } 
+      },
+    })
+  } catch (error) {
+    console.error("Failed to fetch admin orders:", error)
+    return []
+  }
 }
 
 export default async function AdminOrdersPage() {
-  let orders: Awaited<ReturnType<typeof getOrders>> = []
-  try { orders = await getOrders() } catch { /* DB not configured */ }
+  const orders = await getOrders()
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
@@ -47,7 +43,7 @@ export default async function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((o) => (
+              {orders.map((o: any) => (
                 <tr key={o.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                   <td className="px-4 py-3 font-mono text-xs text-white/55">#{o.id.slice(-8).toUpperCase()}</td>
                   <td className="px-4 py-3">
@@ -55,7 +51,7 @@ export default async function AdminOrdersPage() {
                     <div className="font-mono text-[10px] text-white/35">{o.user.email}</div>
                   </td>
                   <td className="px-4 py-3 max-w-[160px] truncate text-white/55">
-                    {o.items.map(i => i.product.name).join(", ")}
+                    {o.items.map((i: any) => i.product.name).join(", ")}
                   </td>
                   <td className="px-4 py-3 font-mono font-bold text-white">{formatPrice(o.total)}</td>
                   <td className="px-4 py-3 font-mono text-xs text-[color:var(--neon-purple)]">

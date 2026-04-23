@@ -37,7 +37,7 @@ export default async function AdminCustomOrdersPage() {
         </div>
 
         <div className="space-y-4">
-          {orders.map((o) => (
+          {orders.map((o: any) => (
             <div key={o.id} className="glass rounded-2xl p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="flex-1 space-y-2">

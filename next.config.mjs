@@ -10,6 +10,7 @@ const nextConfig = {
     ],
     unoptimized: false,
   },
+  serverExternalPackages: ["@prisma/client", "prisma", "@auth/prisma-adapter"],
 }
 
 export default nextConfig

@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       })
       if (order) {
         await Promise.all(
-          order.items.map((item) =>
+          order.items.map((item: any) =>
             prisma.product.update({
               where: { id: item.productId },
               data: { stock: { decrement: item.quantity } },

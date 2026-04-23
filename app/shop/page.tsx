@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+export const runtime = "nodejs"
 import { SiteNavbar } from "@/components/site-navbar"
 import { SiteFooter } from "@/components/site-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
@@ -76,7 +77,7 @@ export default async function ShopPage({
         {/* Grid */}
         {products.length > 0 ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((p) => (
+            {products.map((p: any) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

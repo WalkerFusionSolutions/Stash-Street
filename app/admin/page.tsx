@@ -1,3 +1,4 @@
+export const runtime = "nodejs"
 import type { Metadata } from "next"
 import { SiteNavbar } from "@/components/site-navbar"
 import { SiteFooter } from "@/components/site-footer"
@@ -114,7 +115,7 @@ export default async function AdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentOrders.map((o) => (
+                  {recentOrders.map((o: any) => (
                     <tr key={o.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-white/55">#{o.id.slice(-8).toUpperCase()}</td>
                       <td className="px-4 py-3 text-white/75">{o.user.name ?? o.user.email}</td>
