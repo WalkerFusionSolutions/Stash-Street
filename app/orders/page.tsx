@@ -1,3 +1,5 @@
+export const runtime = "nodejs"
+
 import type { Metadata } from "next"
 import { SiteNavbar } from "@/components/site-navbar"
 import { SiteFooter } from "@/components/site-footer"
@@ -19,13 +21,26 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; co
   FAILED:       { label: "Failed",       icon: XCircle,       color: "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40" },
 }
 
+async function getOrders(userId: string) {
+  try {
+    return await prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: { include: { product: { select: { name: true } } } },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+  } catch (error) {
+    console.error("Failed to fetch user orders:", error)
+    return []
+  }
+}
+
 export default async function OrdersPage() {
   const session = await auth()
+  if (!session?.user?.id) return null
 
-  let orders: Awaited<ReturnType<typeof getOrders>> = []
-  try {
-    orders = await getOrders(session!.user.id)
-  } catch { /* DB not configured */ }
+  const orders = await getOrders(session.user.id)
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
@@ -47,7 +62,7 @@ export default async function OrdersPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {orders.map((order) => {
+            {orders.map((order: any) => {
               const cfg = STATUS_CONFIG[order.status] ?? STATUS_CONFIG.PENDING
               const Icon = cfg.icon
               return (
@@ -70,7 +85,7 @@ export default async function OrdersPage() {
                       </div>
                       <div className="mt-2 text-sm text-white/60">
                         {order.items.length} item{order.items.length > 1 ? "s" : ""} ·{" "}
-                        {order.items.map((i) => i.product.name).join(", ")}
+                        {order.items.map((i: any) => i.product.name).join(", ")}
                       </div>
                     </div>
                     <div className="text-right">
@@ -92,14 +107,4 @@ export default async function OrdersPage() {
       <SiteFooter />
     </main>
   )
-}
-
-async function getOrders(userId: string) {
-  return prisma.order.findMany({
-    where: { userId },
-    include: {
-      items: { include: { product: { select: { name: true } } } },
-    },
-    orderBy: { createdAt: "desc" },
-  })
 }

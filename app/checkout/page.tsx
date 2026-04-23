@@ -83,7 +83,7 @@ export default function CheckoutPage() {
             <div className="glass rounded-2xl p-6">
               <div className="font-mono text-[11px] tracking-[0.3em] text-white/40 mb-4">ITEMS</div>
               <div className="space-y-4">
-                {items.map((item) => (
+                {items.map((item: any) => (
                   <div key={item.id} className="flex items-center gap-3">
                     <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-black">
                       <Image src={item.imageUrl || "/placeholder.svg"} alt={item.name} fill className="object-cover" />

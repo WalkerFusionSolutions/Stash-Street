@@ -42,7 +42,7 @@ export default function CartPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
             {/* Items */}
             <div className="space-y-4">
-              {items.map((item) => (
+              {items.map((item: any) => (
                 <div key={item.id} className="glass flex items-center gap-4 rounded-2xl p-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-black">
                     <Image
@@ -94,7 +94,7 @@ export default function CartPage() {
               <div className="font-mono text-[11px] tracking-[0.3em] text-white/40">ORDER SUMMARY</div>
 
               <div className="mt-5 space-y-3 text-sm">
-                {items.map((item) => (
+                {items.map((item: any) => (
                   <div key={item.id} className="flex items-center justify-between gap-2 text-white/65">
                     <span className="truncate">{item.name}</span>
                     <span className="shrink-0 font-mono">{formatPrice(item.price)}</span>

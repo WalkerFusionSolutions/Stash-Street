@@ -164,7 +164,7 @@ export default function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((p) => (
+                {products.map((p: any) => (
                   <tr key={p.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                     <td className="px-3 py-3">
                       <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-black">

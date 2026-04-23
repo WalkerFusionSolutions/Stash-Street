@@ -41,13 +41,13 @@ export async function POST(req: NextRequest) {
             currency: "usd",
             product_data: {
               name: `Stash Street Order — 50% Deposit (${items.length} item${items.length > 1 ? "s" : ""})`,
-              description: items.map((i) => `${i.brand} ${i.name}`).join(", "),
+              description: items.map((i: any) => `${i.brand} ${i.name}`).join(", "),
             },
             unit_amount: toCents(chargeAmount),
           },
           quantity: 1,
         }]
-      : items.map((item) => ({
+      : items.map((item: any) => ({
           price_data: {
             currency: "usd",
             product_data: {
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         amountPaid: 0,
         expiresAt: new Date(Date.now() + 30 * 60 * 1000), // 30 min grace window
         items: {
-          create: items.map((item) => ({
+          create: items.map((item: any) => ({
             productId: item.id,
             quantity: item.quantity,
             price: item.price,

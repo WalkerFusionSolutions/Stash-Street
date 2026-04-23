@@ -1,3 +1,5 @@
+export const runtime = "nodejs"
+
 import type { Metadata } from "next"
 import { SiteNavbar } from "@/components/site-navbar"
 import { SiteFooter } from "@/components/site-footer"
@@ -17,9 +19,19 @@ const STATUS_COLORS: Record<string, string> = {
   CANCELLED:  "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40",
 }
 
+async function getOrders() {
+  try {
+    return await prisma.customOrderRequest.findMany({
+      orderBy: { createdAt: "desc" },
+    })
+  } catch (error) {
+    console.error("Failed to fetch admin custom orders:", error)
+    return []
+  }
+}
+
 export default async function AdminCustomOrdersPage() {
-  let orders: Awaited<ReturnType<typeof getOrders>> = []
-  try { orders = await getOrders() } catch { /* DB not configured */ }
+  const orders = await getOrders()
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
@@ -83,11 +95,4 @@ export default async function AdminCustomOrdersPage() {
       <SiteFooter />
     </main>
   )
-}
-
-async function getOrders() {
-  return prisma.customOrderRequest.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { user: { select: { name: true, email: true } } },
-  })
 }

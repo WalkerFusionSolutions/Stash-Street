@@ -1,5 +1,25 @@
 export const runtime = "nodejs"
 
+import type { Metadata } from "next"
+import { SiteNavbar } from "@/components/site-navbar"
+import { SiteFooter } from "@/components/site-footer"
+import { prisma } from "@/lib/prisma"
+import { formatPrice, formatDate } from "@/lib/utils"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+
+export const metadata: Metadata = { title: "Admin — Orders" }
+
+const STATUS_COLORS: Record<string, string> = {
+  PENDING:      "text-white/45 border-white/15",
+  PARTIAL_PAID: "text-[color:var(--neon-purple)] border-[color:var(--neon-purple)]/40",
+  PAID:         "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
+  SHIPPED:      "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
+  DELIVERED:    "text-[color:var(--neon-cyan)] border-[color:var(--neon-cyan)]/40",
+  CANCELLED:    "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40",
+  FAILED:       "text-[color:var(--neon-pink)] border-[color:var(--neon-pink)]/40",
+}
+
 async function getOrders() {
   try {
     return await prisma.order.findMany({
@@ -76,14 +96,4 @@ export default async function AdminOrdersPage() {
       <SiteFooter />
     </main>
   )
-}
-
-async function getOrders() {
-  return prisma.order.findMany({
-    include: {
-      user: { select: { name: true, email: true } },
-      items: { include: { product: { select: { name: true } } } },
-    },
-    orderBy: { createdAt: "desc" },
-  })
 }

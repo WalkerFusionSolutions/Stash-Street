@@ -119,7 +119,7 @@ export default async function AdminPage() {
                     <tr key={o.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-white/55">#{o.id.slice(-8).toUpperCase()}</td>
                       <td className="px-4 py-3 text-white/75">{o.user.name ?? o.user.email}</td>
-                      <td className="px-4 py-3 text-white/55 max-w-[160px] truncate">{o.items.map((i) => i.product.name).join(", ")}</td>
+                      <td className="px-4 py-3 text-white/55 max-w-[160px] truncate">{o.items.map((i: any) => i.product.name).join(", ")}</td>
                       <td className="px-4 py-3 font-mono font-bold text-white">{formatPrice(o.total)}</td>
                       <td className={`px-4 py-3 font-mono text-xs ${STATUS_COLORS[o.status] ?? "text-white/50"}`}>{o.status}</td>
                       <td className="px-4 py-3 text-white/40 text-xs">{formatDate(o.createdAt)}</td>
