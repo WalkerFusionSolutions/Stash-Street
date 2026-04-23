@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { prisma } from "@/lib/prisma"
 import { headers } from "next/headers"
+import Stripe from "stripe"
 
 // Must disable body parser — Stripe needs raw body for signature verification
 export const runtime = "nodejs"
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 })
   }
 
-  let event: ReturnType<typeof stripe.webhooks.constructEvent> extends Promise<infer T> ? T : never
+  let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
   } catch (err) {
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
         prisma.order.update({
           where: { id: orderId },
           data: {
-            status: isDeposit ? "PARTIAL_PAID" : "PAID",
+            status: (isDeposit ? "PARTIAL_PAID" : "PAID") as any,
             amountPaid,
           },
         }),
@@ -47,11 +48,11 @@ export async function POST(req: NextRequest) {
           create: {
             orderId,
             amount: amountPaid,
-            status: "PAID",
+            status: "PAID" as any,
             stripeId: session.id,
           },
           update: {
-            status: "PAID",
+            status: "PAID" as any,
             amount: amountPaid,
           },
         }),
@@ -80,7 +81,7 @@ export async function POST(req: NextRequest) {
       if (orderId) {
         await prisma.order.update({
           where: { id: orderId },
-          data: { status: "CANCELLED" },
+          data: { status: "CANCELLED" as any },
         })
       }
     }
@@ -91,7 +92,7 @@ export async function POST(req: NextRequest) {
       if (paymentIntentId) {
         await prisma.payment.updateMany({
           where: { stripeId: paymentIntentId },
-          data: { status: "REFUNDED" },
+          data: { status: "REFUNDED" as any },
         })
       }
     }

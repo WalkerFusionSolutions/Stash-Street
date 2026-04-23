@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const orders = await prisma.customOrderRequest.findMany({
-      where: status ? { status } : {},
+      where: status ? { status: status as any } : {},
       orderBy: { createdAt: "desc" },
       include: { user: { select: { name: true, email: true } } },
     })

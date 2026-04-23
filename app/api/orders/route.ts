@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     if (isAdmin) {
       const status = searchParams.get("status")
       const orders = await prisma.order.findMany({
-        where: status ? { status } : {},
+        where: status ? { status: status as any } : {},
         include: {
           user: { select: { name: true, email: true } },
           items: { include: { product: { select: { name: true, brand: true } } } },

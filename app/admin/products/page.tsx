@@ -55,7 +55,7 @@ export default function AdminProductsPage() {
 
   function openNew() { reset({}); setEditing(null); setShowForm(true) }
   function openEdit(p: Product) {
-    reset({ ...p, tag: p.tag ?? "", size: p.size ?? "", description: "" })
+    reset({ ...p, tag: (p.tag ?? "") as FormData["tag"], size: p.size ?? "", description: "" })
     setEditing(p)
     setShowForm(true)
   }
